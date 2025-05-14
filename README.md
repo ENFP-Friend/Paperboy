@@ -1,4 +1,5 @@
 # 📬 Paperboy
+![Paperboy Logo](public/img/logo.png)
 
 **Paperboy** is a modular, map-based flyer delivery route visualizer.  
 It starts as a browser-based MVP that solves naive delivery routes using geometric distance, and is structured for my **own future extension** — including path-aware routing, kerb-snapping, and backend support via OSRM.

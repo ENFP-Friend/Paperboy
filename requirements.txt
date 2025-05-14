@@ -1,0 +1,10 @@
+# --- MVP-Ready Backend Dependencies ---
+flask                   # web framework for building API endpoints
+python-dotenv           # load settings from .env file
+requests                # HTTP requests to external services (e.g. OSRM)
+
+# --- Post-MVP / Upgrade Phase ---
+# geopandas             # for handling GeoJSON and shapefiles (optional)
+# shapely               # geometric operations (e.g., point snapping)
+# networkx              # graph-based routing or analysis
+# ortools               # advanced TSP solving (commented for now)
