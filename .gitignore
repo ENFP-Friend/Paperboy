@@ -1,0 +1,30 @@
+
+#Secrets & API keys
+.env
+api/config/config.json
+api/config/logging_config.py
+
+#Large or bulky data (avoid pushing to Git)
+data/buildings/microsoft_footprints.geojson
+data/osm/act.osm.pbf
+data/distance_matrix.json
+data/route_output.geojson
+
+#Python cache
+__pycache__/
+*.py[cod]
+
+#Virtual environments
+venv/
+
+#Editor/IDE & OS clutter
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+#Logs
+*.log
+
+#Node modules (if frontend tooling added later)
+node_modules/
