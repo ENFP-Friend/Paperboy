@@ -1,3 +1,5 @@
+import { loadFlyerPoints } from './loadPoints.js';
+
 const map = new maplibregl.Map({
   container: 'map',
   style: {
@@ -32,4 +34,6 @@ const map = new maplibregl.Map({
 map.on('load', () => {
   map.getCanvas().style.imageRendering = 'auto'; // or 'pixelated' if you want crisp zoom
   map.getCanvas().style.filter = 'contrast(105%) brightness(1.05)';
+  loadFlyerPoints(map);
 });
+
