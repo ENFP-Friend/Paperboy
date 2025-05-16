@@ -4,71 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Paperboy Route Optimizer</title>
-
-  <!-- Local MapLibre CSS -->
-  <link rel="stylesheet" href="libs/maplibre-gl.css" />
-  <link rel="icon" type="image/png" href="img/favicon.png" />
-  
-
-
+  <link href="https://unpkg.com/maplibre-gl@3.4.0/dist/maplibre-gl.css" rel="stylesheet" />
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-    }
-    #map {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
+    html, body { margin: 0; padding: 0; height: 100%; width: 100%; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    #controls {
+      position: absolute; top: 10px; left: 10px; z-index: 999;
+      background: white; padding: 8px; border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 <body>
   <div id="map"></div>
-
-  <div id="controls" style="
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 999;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 8px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  font-family: sans-serif;
-">
-
-
-
-  <select id="tspSolver" style="margin-right: 8px; padding: 4px;">
-    <option value="greedy">Greedy</option>
-    <option value="2opt">2-Opt</option>
-    <option value="brute">Brute Force</option>
-  </select>
-  <button id="solveRoute" style="
-    padding: 6px 12px;
-    background: #ff8c00;
-    border: none;
-    color: white;
-    font-weight: bold;
-    border-radius: 4px;
-    cursor: pointer;">
-    Solve Route
-  </button>
-</div>
-
-
-
-
-
-  <!-- Local MapLibre JS -->
-<script src="libs/maplibre-gl.js"></script>
-<script type="module" src="map.js" defer></script>
+  <div id="controls">
+    <select id="tspSolver">
+      <option value="osrm">OSRM Clustered</option>
+      <option value="greedy">Greedy (Euclidean)</option>
+    </select>
+    <button id="solveRouteBtn">Solve Route</button>
+  </div>
+  <script src="https://unpkg.com/maplibre-gl@3.4.0/dist/maplibre-gl.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
+<!-- ✅ Load supporting scripts first -->
+<script src="loadLayers.js"></script>
+<script src="loadPoints.js"></script>
+<script src="solveTSP.js"></script>
+<script src="clustered_route_solver.js"></script>
 
-
+<!-- ✅ Then load the main logic -->
+<script src="map.js"></script>
 </body>
 </html>

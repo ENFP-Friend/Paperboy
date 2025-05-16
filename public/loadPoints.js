@@ -1,9 +1,13 @@
 // loadPoints.js
 // 🏠 Loads and displays flyer drop points from address_points.geojson
 
-export async function loadFlyerPoints(map) {
+async function loadFlyerPoints(map) {
+
   try {
-    const res = await fetch('../data/address_points.geojson');
+    // snapPointsToPaths.js
+// No longer needed — using pre-snapped OSRM points from Python
+    // const res = await fetch('../data/address_points.geojson');
+    const res = await fetch('../data/snapped_address_points.geojson');
     const geojson = await res.json();
 
     if (!map.getSource('flyer-points')) {
@@ -47,3 +51,5 @@ export async function loadFlyerPoints(map) {
     console.error('❌ Failed to load flyer drop points:', err);
   }
 }
+
+window.loadFlyerPoints = loadFlyerPoints;

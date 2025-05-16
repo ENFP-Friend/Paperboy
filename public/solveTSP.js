@@ -1,8 +1,8 @@
 
-import { footpathLines } from './loadLayers.js';
-import { snapToNearestPath } from './snapPointsToPaths.js';
+// import { footpathLines } from './loadLayers.js';
+// import { snapToNearestPath } from './snapPointsToPaths.js';
 
-function getFlyerCoords(map) {
+ function getFlyerCoords(map) {
   const source = map.getSource('flyer-points');
   const features = (source?._data?.features || []).slice(0, 100000); // 🔧 Limit to 10 points for now
 
@@ -23,21 +23,8 @@ function getFlyerCoords(map) {
       return null;
     }
 
-    try {
-      const pt = turf.point(coords);
-      let snapped = snapToNearestPath(pt, footpathLines, 100);
-      if (!snapped) snapped = snapToNearestPath(pt, footpathLines, 300);
+return coords; // skipping snapping logic — already snapped via Python
 
-      if (!snapped || !Array.isArray(snapped.geometry?.coordinates)) {
-        console.warn(`⚠️ Snap failed at index ${i}:`, snapped);
-        return coords; // fallback
-      }
-
-      return snapped.geometry.coordinates;
-    } catch (e) {
-      console.error(`❌ Snap error at index ${i}:`, e);
-      return coords;
-    }
   }).filter(coord =>
     Array.isArray(coord) &&
     coord.length === 2 &&
@@ -62,11 +49,35 @@ function euclideanDistance(a, b) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
+async function buildDistanceMatrixOSRM(coords) {
+  const maxPoints = 100;
+  if (coords.length > maxPoints) {
+    console.warn(`⚠️ OSRM can only handle ${maxPoints} points. You passed ${coords.length}. Consider clustering.`);
+    return buildDistanceMatrix(coords); // fallback to Euclidean
+  }
+
+  const coordStr = coords.map(c => `${c[0]},${c[1]}`).join(';');
+  const url = `http://127.0.0.1:5000/table/v1/foot/${coordStr}?annotations=duration`;
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data.durations) throw new Error('Missing durations in OSRM response');
+
+    return data.durations;
+  } catch (err) {
+    console.error('❌ OSRM fallback – using Euclidean:', err);
+    return buildDistanceMatrix(coords); // fallback
+  }
+}
+
+
 function buildDistanceMatrix(coords) {
   return coords.map(a => coords.map(b => euclideanDistance(a, b)));
 }
 
-function solveGreedyTSP(matrix) {
+ function solveGreedyTSP(matrix) {
   const n = matrix.length;
   const visited = new Array(n).fill(false);
   const path = [0];
@@ -82,13 +93,13 @@ function solveGreedyTSP(matrix) {
         minDist = matrix[last][j];
       }
     }
-    if (next === -1) break;
     path.push(next);
     visited[next] = true;
   }
 
   return path;
 }
+
 
 function solveBruteForce(matrix) {
   const permute = (arr) => {
@@ -124,9 +135,9 @@ function solveBruteForce(matrix) {
   return bestPath;
 }
 
-function solve2Opt(coords, initialOrder, maxPasses = 3) {
+async function solve2Opt(coords, initialOrder, maxPasses = 3) {
   let order = [...initialOrder];
-  const matrix = buildDistanceMatrix(coords);
+  const matrix = await buildDistanceMatrixOSRM(coords);
   let improved = true;
   let passes = 0;
 
@@ -202,7 +213,7 @@ function drawRoute(map, coords, order) {
   }
 }
 
-export function solveTSP(map, solver = 'greedy') {
+ async function solveTSP(map, solver = 'greedy') {
   console.log(`Solver selected: ${solver}`);
   console.time('TSP Solve Time');
 
@@ -220,7 +231,7 @@ export function solveTSP(map, solver = 'greedy') {
   }
 
   let order;
-  const matrix = buildDistanceMatrix(coords);
+  const matrix = await buildDistanceMatrixOSRM(coords);
 
   try {
     setTimeout(() => {
@@ -279,3 +290,9 @@ window.debugFlyerCount = function () {
     console.error("❌ Error in debugFlyerCount:", e);
   }
 };
+
+
+
+window.solveGreedyTSP = solveGreedyTSP;
+window.getFlyerCoords = getFlyerCoords;
+window.solveTSP = solveTSP;
