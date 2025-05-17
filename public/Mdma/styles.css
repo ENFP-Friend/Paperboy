@@ -1,0 +1,381 @@
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+  height: calc(100vh - 150px);
+  min-height: 400px;
+}
+
+textarea, .preview {
+  flex: 1;
+  padding: 15px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  overflow: auto;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+textarea {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  resize: none;
+}
+
+.preview {
+  background-color: #fafafa;
+}
+
+h1 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  transition: color 0.3s;
+}
+
+.controls {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.theme-toggle {
+  background-color: #2196F3;
+}
+
+.theme-toggle:hover {
+  background-color: #0b7dda;
+}
+
+.dark-theme {
+  background-color: #1a1a1a;
+  color: #f1f1f1;
+}
+
+.dark-theme textarea, .dark-theme .preview {
+  background-color: #2d2d2d;
+  color: #f1f1f1;
+  border-color: #444;
+}
+
+.dark-theme h1 {
+  color: #58a6ff;
+}
+
+/* Custom Markdown Styles */
+.md-header {
+  color: #2c3e50;
+  margin-top: 1.2em;
+  margin-bottom: 0.8em;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.dark-theme .md-header {
+  color: #58a6ff;
+}
+
+.md-header-1 {
+  font-size: 2em;
+  border-bottom: 1px solid #eaecef;
+  padding-bottom: 0.3em;
+}
+
+.md-header-2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid #eaecef;
+  padding-bottom: 0.3em;
+}
+
+.md-header-3 { font-size: 1.25em; }
+.md-header-4 { font-size: 1em; }
+.md-header-5 { font-size: 0.875em; }
+.md-header-6 { font-size: 0.85em; color: #6a737d; }
+
+.dark-theme .md-header-6 { color: #999; }
+
+.md-paragraph {
+  margin-top: 0;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.md-list {
+  padding-left: 2em;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.md-list li {
+  margin-bottom: 0.25em;
+}
+
+.md-code {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  padding: 16px;
+  overflow: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 85%;
+  line-height: 1.45;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-theme .md-code {
+  background-color: #2d2d2d;
+  color: #e6e6e6;
+}
+
+.md-code-inline {
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+  padding: 0.2em 0.4em;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 85%;
+  transition: background-color 0.3s;
+}
+
+.dark-theme .md-code-inline {
+  background-color: rgba(240, 246, 252, 0.15);
+  color: #e6e6e6;
+}
+
+.md-blockquote {
+  margin: 0;
+  margin-bottom: 16px;
+  padding: 0 1em;
+  color: #6a737d;
+  border-left: 0.25em solid #dfe2e5;
+  transition: color 0.3s, border-left-color 0.3s;
+}
+
+.dark-theme .md-blockquote {
+  color: #999;
+  border-left-color: #444;
+}
+
+.md-blockquote > :first-child { margin-top: 0; }
+.md-blockquote > :last-child { margin-bottom: 0; }
+
+.md-link {
+  color: #0366d6;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.dark-theme .md-link {
+  color: #58a6ff;
+}
+
+.md-link:hover {
+  text-decoration: underline;
+}
+
+.md-image {
+  max-width: 100%;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+
+.md-bold {
+  font-weight: 600;
+}
+
+.md-italic {
+  font-style: italic;
+}
+
+.md-strikethrough {
+  text-decoration: line-through;
+}
+
+.md-hr {
+  height: 0.25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: #e1e4e8;
+  border: 0;
+  transition: background-color 0.3s;
+}
+
+.dark-theme .md-hr {
+  background-color: #444;
+}
+
+.md-table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  margin-top: 0;
+  margin-bottom: 16px;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.md-table th {
+  font-weight: 600;
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+  transition: border-color 0.3s;
+}
+
+.md-table td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+  transition: border-color 0.3s;
+}
+
+.dark-theme .md-table th,
+.dark-theme .md-table td {
+  border-color: #444;
+}
+
+.md-table tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+  transition: background-color 0.3s, border-top-color 0.3s;
+}
+
+.dark-theme .md-table tr {
+  background-color: #2d2d2d;
+  border-top-color: #444;
+}
+
+.md-table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+  transition: background-color 0.3s;
+}
+
+.dark-theme .md-table tr:nth-child(2n) {
+  background-color: #333;
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  transition: color 0.3s;
+}
+
+.dark-theme .footer {
+  color: #999;
+}
+
+.live-update {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 22px;
+  margin-right: 8px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.toggle-label {
+  font-size: 14px;
+}
+
+.file {
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.file:hover {
+  background-color: #f0f0f0;
+}
+
+.dark-theme .file:hover {
+  background-color: #333;
+}
+
+.file.active {
+  background-color: #d0f0d8;
+}
+
+.dark-theme .file.active {
+  background-color: #2a4;
+}
+
+#mdma-editor {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+#mdma-filename {
+  padding: 5px;
+  font-size: 14px;
+}

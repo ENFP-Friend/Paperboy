@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sexy Markdown Parser Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>✨ Sexy Markdown Parser Demo</h1>
+  
+  <div class="controls">
+    <button id="parse-btn">Parse Markdown</button>
+    <button id="clear-btn">Clear</button>
+    <button class="theme-toggle" id="theme-toggle">Toggle Dark Mode</button>
+    <div class="live-update">
+      <label class="toggle-switch">
+        <input type="checkbox" id="live-toggle" checked>
+        <span class="slider"></span>
+      </label>
+      <span class="toggle-label">Live Update</span>
+    </div>
+  </div>
+  
+  <div class="container">
+    <textarea id="markdown-input" placeholder="Enter your Markdown here...">
+## Welcome to the Sexy Markdown Parser! 🚀
+
+This **beautiful** parser converts your _markdown_ into **_gorgeous_** HTML.
+
+### Features:
+
+* **Bold** and _italic_ text
+* Headers (like the ones above)
+* [Links](https://github.com)
+* Images: ![Example](https://via.placeholder.com/150)
+* `inline code` blocks
+* Code blocks with syntax highlighting:
+
+```javascript
+function hello() {
+  console.log("Hello, world!");
+}

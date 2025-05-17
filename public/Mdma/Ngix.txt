@@ -1,0 +1,45 @@
+# 🧠 Running and Controlling Nginx on Windows
+
+## 🚀 Running Nginx
+
+1. **Open a command prompt (cmd) or PowerShell.**
+
+2. **Navigate to the directory where you extracted Nginx:**
+   ```bash
+   cd C:\nginx
+   ```
+
+3. **Start Nginx:**
+   ```bash
+   start nginx
+   ```
+   or simply:
+   ```bash
+   nginx.exe
+   ```
+
+> 🕶️ *Note: Nginx doesn't show a console window when started this way. It runs as a background process.*
+
+---
+
+## 🛠️ Controlling Nginx
+
+- **To stop Nginx (fast shutdown):**
+  ```bash
+  nginx -s stop
+  ```
+
+- **To stop Nginx (graceful shutdown):**
+  ```bash
+  nginx -s quit
+  ```
+
+- **To reload configuration after changes:**
+  ```bash
+  nginx -s reload
+  ```
+
+- **To test configuration:**
+  ```bash
+  nginx -t
+  ```

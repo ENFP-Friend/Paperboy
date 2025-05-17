@@ -1,0 +1,57 @@
+# Advanced Markdown Example 1
+
+## Introduction to Advanced Features 🚀
+
+This document showcases some of the **more advanced** features of our _markdown_ parser.
+
+### Code Blocks with Syntax Highlighting
+
+```javascript
+// Here's a more complex example
+class AdvancedExample {
+  constructor(options = {}) {
+    this.options = {
+      feature1: true,
+      feature2: false,
+      ...options
+    };
+  }
+  
+  initialize() {
+    console.log("Advanced example initialized with:", this.options);
+    return this.options.feature1 ? "Feature 1 enabled" : "Feature 1 disabled";
+  }
+}
+```
+
+### Complex Tables
+
+| Feature | Basic Support | Advanced Support | Notes |
+|---------|:-------------:|:----------------:|-------|
+| Headers | ✅ | ✅ | Including all levels |
+| Code Blocks | ✅ | ✅ | With syntax highlighting |
+| Tables | ✅ | ✅ | With alignment options |
+| Task Lists | ❌ | ✅ | Not in basic markdown |
+| Footnotes | ❌ | ✅ | Extended syntax only |
+
+### Nested Lists
+
+* Main item 1
+  * Sub-item 1.1
+  * Sub-item 1.2
+    * Sub-sub-item 1.2.1
+* Main item 2
+  1. Ordered sub-item 2.1
+  2. Ordered sub-item 2.2
+
+### Blockquotes with Markdown
+
+> **Important note:**
+> 
+> This blockquote contains _formatted_ text and a [link to documentation](https://example.com/docs).
+> 
+> It can even contain code: `const example = true;`
+
+---
+
+Check out [Example 2](example2.mdma) for more advanced features!

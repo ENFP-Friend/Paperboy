@@ -1,0 +1,56 @@
+# 🐳 Run Nginx in Docker
+
+## ✅ 1. Pull the Official Nginx Image
+```bash
+docker pull nginx
+```
+
+---
+
+## ✅ 2. Run Nginx Container
+
+### Basic:
+```bash
+docker run --name nginx-container -d -p 8080:80 nginx
+```
+
+- `--name nginx-container`: Name your container
+- `-d`: Detached mode (runs in background)
+- `-p 8080:80`: Maps localhost:8080 to container's port 80
+
+> 🧪 Visit [http://localhost:8080](http://localhost:8080) to see the default Nginx page
+
+---
+
+## ✅ 3. Serve Your Own Files
+
+### On Windows:
+```bash
+docker run --name nginx-container -d -p 8080:80 -v C:\your\site\folder:/usr/share/nginx/html:ro nginx
+```
+
+### On Linux/macOS:
+```bash
+docker run --name nginx-container -d -p 8080:80 -v $(pwd)/site:/usr/share/nginx/html:ro nginx
+```
+
+---
+
+## ✅ 4. Control Nginx Container
+
+```bash
+docker stop nginx-container
+docker start nginx-container
+```
+
+---
+
+## ✅ 5. View Logs
+
+```bash
+docker logs nginx-container
+```
+
+---
+
+Let me know if you want a reverse proxy or config setup. I can guide you through it. 🧠

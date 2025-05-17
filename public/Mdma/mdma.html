@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💊 MDMA – Markdown Makes Anything</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>💊 MDMA – Markdown Makes Anything</h1>
+  
+  <div class="controls">
+    <button class="theme-toggle" id="theme-toggle">Toggle Dark Mode</button>
+    <button id="refresh-btn">Refresh File List</button>
+  </div>
+  
+  <div class="current-file" id="current-file">No file selected</div>
+  
+  <div class="container">
+    <div class="directory" id="directory">
+      <!-- Files will be loaded dynamically -->
+      <div class="loading">Loading files...</div>
+    </div>
+    <div class="preview" id="preview"></div>
+  </div>
+
+  <div class="editor">
+  <h2>Create New .mdma File</h2>
+  <textarea id="mdma-editor" rows="12" placeholder="Paste your .mdma content here..."></textarea><br>
+  <input type="text" id="mdma-filename" placeholder="File name (without extension)">
+  <button onclick="saveMdma()">💾 Save .mdma</button>
+</div>
+
+  
+  
+  <div class="footer">
+    Built with ❤️ using <strong>MDMA – Markdown Makes Anything</strong>
+  </div>
+
+  <script>
+    // Markdown parser implementation
+    class MarkdownParser {
+      constructor(options = {}) {
+        this.options = {
+          headerClass: 'md-header',
+          paragraphClass: 'md-paragraph',
+          listClass: 'md-list',
+          codeClass: 'md-code',
+          blockquoteClass: 'md-blockquote',
+          linkClass: 'md-link',
+          imageClass: 'md-image',
+          boldClass: 'md-bold',
+          italicClass: 'md-italic',
+          strikethroughClass: 'md-strikethrough',
+          horizontalRuleClass: 'md-hr',
+          tableClass: 'md-table',
+          ...options
+        };
+      }
+
+      parse(markdownText) {
+        if (!markdownText) return '';
+        
+        let html = markdownText;
+        
+        html = this._escapeHtml(html);
+        html = this._processCodeBlocks(html);
+        html = this._processBlockquotes(html);
+        html = this._processTables(html);
+        html = this._processLists(html);
+        html = this._processHeaders(html);
+        html = this._processHorizontalRules(html);
+        html = this._processParagraphs(html);
+        html = this._processInlineCode(html);
+        html = this._processBoldItalic(html);
+        html = this._processStrikethrough(html);
+        html = this._processLinks(html);
+        html = this._processImages(html);
+        
+        return html;
+      }
+      
+      _escapeHtml(text) {
+        const escapeMap = {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        };
+        
+        const codeBlockRegex = /```[\s\S]*?```|`[^`]*`/g;
+        const blocks = [];
+        
+        let result = text.replace(codeBlockRegex, match => {
+          blocks.push(match);
+          return `CODEBLOCK${blocks.length - 1}PLACEHOLDER`;
+        });
+        
+        result = result.replace(/[&<>"']/g, match => escapeMap[match]);
+        
+        result = result.replace(/CODEBLOCK(\d+)PLACEHOLDER/g, (_, index) => blocks[parseInt(index)]);
+        
+        return result;
+      }
+      
+      _processCodeBlocks(text) {
+        const codeBlockRegex = /```(?:(\w+)\n)?([\s\S]*?)```/g;
+        
+        return text.replace(codeBlockRegex, (match, language, code) => {
+          const langClass = language ? ` language-${language}` : '';
+          return `<pre class="${this.options.codeClass}"><code class="${langClass}">${code}</code></pre>`;
+        });
+      }
+      
+      _processInlineCode(text) {
+        return text.replace(/`([^`]+)`/g, (match, code) => {
+          return `<code class="${this.options.codeClass}-inline">${code}</code>`;
+        });
+      }
+      
+      _processHeaders(text) {
+        return text
+          .replace(/^(#{1,6})\s+(.*?)$/gm, (match, hashes, content) => {
+            const level = hashes.length;
+            return `<h${level} class="${this.options.headerClass} ${this.options.headerClass}-${level}">${content}</h${level}>`;
+          })
+          .replace(/^(.+)\n=+$/gm, (match, content) => {
+            return `<h1 class="${this.options.headerClass} ${this.options.headerClass}-1">${content}</h1>`;
+          })
+          .replace(/^(.+)\n-+$/gm, (match, content) => {
+            return `<h2 class="${this.options.headerClass} ${this.options.headerClass}-2">${content}</h2>`;
+          });
+      }
+      
+      _processParagraphs(text) {
+        const blocks = text.split(/\n{2,}/);
+        
+        return blocks.map(block => {
+          if (block.trim() === '' || 
+              block.startsWith('<h') || 
+              block.startsWith('<pre') || 
+              block.startsWith('<ul') || 
+              block.startsWith('<ol') || 
+              block.startsWith('<blockquote') ||
+              block.startsWith('<table') ||
+              block.startsWith('<hr')) {
+            return block;
+          }
+          
+          return `<p class="${this.options.paragraphClass}">${block}</p>`;
+        }).join('\n\n');
+      }
+      
+      _processBoldItalic(text) {
+        let result = text.replace(/(\*\*|__)(.*?)\1/g, (match, wrapper, content) => {
+          return `<strong class="${this.options.boldClass}">${content}</strong>`;
+        });
+        
+        result = result.replace(/(\*|_)(.*?)\1/g, (match, wrapper, content) => {
+          return `<em class="${this.options.italicClass}">${content}</em>`;
+        });
+        
+        return result;
+      }
+      
+      _processStrikethrough(text) {
+        return text.replace(/~~(.*?)~~/g, (match, content) => {
+          return `<del class="${this.options.strikethroughClass}">${content}</del>`;
+        });
+      }
+      
+      _processLinks(text) {
+        return text.replace(/\[(.*?)\]\((.*?)(?:\s+"(.*?)")?\)/g, (match, text, url, title) => {
+          const titleAttr = title ? ` title="${title}"` : '';
+          return `<a href="${url}" class="${this.options.linkClass}"${titleAttr}>${text}</a>`;
+        });
+      }
+      
+      _processImages(text) {
+        return text.replace(/!\[(.*?)\]\((.*?)(?:\s+"(.*?)")?\)/g, (match, alt, url, title) => {
+          const titleAttr = title ? ` title="${title}"` : '';
+          return `<img src="${url}" alt="${alt}" class="${this.options.imageClass}"${titleAttr}>`;
+        });
+      }
+      
+      _processLists(text) {
+        let result = text.replace(/(?:^|\n)((?:[ \t]*[-*+][^\n]+(?:\n(?![ \t]*[-*+]|\n|[ \t]*\d+\.)[^\n]+)*)+)/g, (match, listBlock) => {
+          const items = listBlock.split(/\n[ \t]*[-*+]/).slice(1);
+          const listItems = items.map(item => `<li>${item.trim()}</li>`).join('\n');
+          return `<ul class="${this.options.listClass}">\n${listItems}\n</ul>`;
+        });
+        
+        result = result.replace(/(?:^|\n)((?:[ \t]*\d+\.[^\n]+(?:\n(?![ \t]*\d+\.|\n|[ \t]*[-*+])[^\n]+)*)+)/g, (match, listBlock) => {
+          const items = listBlock.split(/\n[ \t]*\d+\./).slice(1);
+          const listItems = items.map(item => `<li>${item.trim()}</li>`).join('\n');
+          return `<ol class="${this.options.listClass}">\n${listItems}\n</ol>`;
+        });
+        
+        return result;
+      }
+      
+      _processBlockquotes(text) {
+        return text.replace(/(?:^|\n)(?:> [^\n]+(?:\n> [^\n]+)*)/g, match => {
+          const content = match.replace(/^> /gm, '');
+          return `<blockquote class="${this.options.blockquoteClass}">${content}</blockquote>`;
+        });
+      }
+      
+      _processHorizontalRules(text) {
+        return text.replace(/^(?:[-*_] ?){3,}$/gm, () => {
+          return `<hr class="${this.options.horizontalRuleClass}">`;
+        });
+      }
+      
+      _processTables(text) {
+        const tableRegex = /^\|(.+)\|\r?\n\|(?:[-:]+\|)+\r?\n(?:\|.+\|\r?\n?)+/gm;
+        
+        return text.replace(tableRegex, (table) => {
+          const rows = table.trim().split('\n');
+          
+          const headers = rows[0].split('|').slice(1, -1).map(h => h.trim());
+          
+          const alignments = rows[1].split('|').slice(1, -1).map(a => {
+            if (a.startsWith(':') && a.endsWith(':')) return 'center';
+            if (a.endsWith(':')) return 'right';
+            return 'left';
+          });
+          
+          let html = `<table class="${this.options.tableClass}">\n<thead>\n<tr>`;
+          headers.forEach((header, i) => {
+            html += `<th style="text-align: ${alignments[i]}">${header}</th>`;
+          });
+          html += '</tr>\n</thead>\n<tbody>\n';
+          
+          for (let i = 2; i < rows.length; i++) {
+            const cells = rows[i].split('|').slice(1, -1).map(c => c.trim());
+            html += '<tr>';
+            cells.forEach((cell, j) => {
+              html += `<td style="text-align: ${alignments[j]}">${cell}</td>`;
+            });
+            html += '</tr>\n';
+          }
+          
+          html += '</tbody>\n</table>';
+          return html;
+        });
+      }
+    }
+
+    // DOM elements
+    const preview = document.getElementById('preview');
+    const themeToggle = document.getElementById('theme-toggle');
+    const refreshBtn = document.getElementById('refresh-btn');
+    const currentFileElement = document.getElementById('current-file');
+    
+    // Create parser instance
+    const parser = new MarkdownParser();
+
+    // Function to load file content from the server
+    function loadFileContent(filename) {
+      return fetch(filename)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`File not found: ${filename}`);
+          }
+          return response.text();
+        });
+    }
+
+    // Function to load the list of files from the server
+function loadFileList() {
+  const directoryEl = document.getElementById('directory');
+  directoryEl.innerHTML = '<div class="loading">Loading files...</div>';
+
+  fetch('file-list.json')
+    .then(response => response.json())
+    .then(files => {
+      directoryEl.innerHTML = '';
+
+      if (files.length === 0) {
+        directoryEl.innerHTML = '<div class="no-files">No .mdma files found</div>';
+        return;
+      }
+
+      let firstValid = null;
+
+      files.forEach(file => {
+        const lower = file.toLowerCase();
+        if (!lower.endsWith('.mdma') && !lower.endsWith('.txt')) return;
+
+        const fileEl = document.createElement('div');
+        fileEl.className = 'file';
+        fileEl.dataset.file = file;
+        fileEl.innerHTML = `
+          <span class="file-icon markdown-icon">📄</span>
+          <span>${file}</span>
+        `;
+
+        fileEl.addEventListener('click', () => {
+          loadFile(file);
+        });
+
+        directoryEl.appendChild(fileEl);
+
+        if (!firstValid) firstValid = file;
+      });
+
+      if (firstValid) {
+        loadFile(firstValid);
+      }
+    })
+    .catch(error => {
+      directoryEl.innerHTML = `<div class="error">Error loading files: ${error.message}</div>`;
+    });
+}
+
+    // Function to load and display a file
+    function loadFile(filename) {
+      // Set loading state
+      preview.innerHTML = '<p>Loading...</p>';
+      currentFileElement.textContent = `Loading: ${filename}`;
+      
+      // Get file content from the actual file system
+      loadFileContent(filename)
+        .then(markdownContent => {
+          // Update current file display
+          currentFileElement.textContent = `Current file: ${filename}`;
+          
+          // Parse markdown to HTML
+          const html = parser.parse(markdownContent);
+          
+          // Update preview
+          preview.innerHTML = html;
+          
+          // Update active file highlight
+          document.querySelectorAll('.file').forEach(el => {
+            if (el.dataset.file === filename) {
+              el.classList.add('active');
+            } else {
+              el.classList.remove('active');
+            }
+          });
+        })
+        .catch(error => {
+          preview.innerHTML = `<p>Error: ${error.message}</p>`;
+        });
+    }
+    
+    // Dark mode toggle
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      if (document.body.classList.contains('dark-theme')) {
+        themeToggle.textContent = 'Toggle Light Mode';
+      } else {
+        themeToggle.textContent = 'Toggle Dark Mode';
+      }
+    });
+    
+    // Handle click on links to other markdown files
+    preview.addEventListener('click', (e) => {
+      // Check if the clicked element is a link
+      if (e.target.tagName === 'A') {
+        const href = e.target.getAttribute('href');
+        
+        // Check if this is a link to a markdown file
+        if (href && href.endsWith('.mdma')) {
+          e.preventDefault(); // Prevent default link behavior
+          loadFile(href);
+        }
+      }
+    });
+    
+    // Refresh file list button
+    refreshBtn.addEventListener('click', loadFileList);
+    
+    // Load the file list when the page loads
+    document.addEventListener('DOMContentLoaded', loadFileList);
+
+    function saveMdma() {
+  const content = document.getElementById("mdma-editor").value.trim();
+  const name = document.getElementById("mdma-filename").value.trim();
+
+  if (!content || !name) {
+    alert("Please enter both a filename and content.");
+    return;
+  }
+
+  const blob = new Blob([content], { type: "text/plain" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `${name}.mdma`;
+  link.click();
+
+  // Optionally clear fields
+  document.getElementById("mdma-editor").value = "";
+  document.getElementById("mdma-filename").value = "";
+  alert("✅ Saved. Move file to your directory and click 'Refresh File List'.");
+}
+
+  </script>
+</body>
+</html>

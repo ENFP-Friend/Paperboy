@@ -1,0 +1,46 @@
+# 🧠 MDMA Basic Commands Cheat Sheet
+
+## Run Valhalla Server
+
+```bash
+docker run -it --rm -p 8002:8002 -v "C:\osmr\data:/data" ghcr.io/valhalla/valhalla:latest valhalla_service /data/valhalla.json
+```
+
+## Background Mode (Detached)
+
+```bash
+docker run -d -p 8002:8002 -v "C:\osmr\data:/data" --name valhalla ghcr.io/valhalla/valhalla:latest valhalla_service /data/valhalla.json
+```
+
+### Control Background Container
+
+```bash
+docker stop valhalla   # ⛔ Stop
+docker start valhalla  # ▶️ Start
+```
+
+## Check If Running
+
+Visit:
+
+```
+http://localhost:8002/route
+```
+
+## Build Config
+
+```bash
+docker run -it --rm -v "C:\osmr\data:/data" ghcr.io/valhalla/valhalla:latest valhalla_build_config --mjolnir-tile-dir /data/valhalla_tiles --mjolnir-tile-extract /data/valhalla_tiles.tar > C:\osmr\data\valhalla.json
+```
+
+## Build Tiles
+
+```bash
+docker run -it --rm -v "C:\osmr\data:/data" ghcr.io/valhalla/valhalla:latest valhalla_build_tiles -c /data/valhalla.json /data/australian_capital_territory.osm.pbf
+```
+
+## Create .tar Tile Extract
+
+```bash
+docker run --rm -v "C:\osmr\data:/data" ghcr.io/valhalla/valhalla:latest tar -cf /data/valhalla_tiles.tar -C /data/valhalla_tiles .
+```

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sexy Markdown Parser Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>✨ Sexy Markdown Parser Demo</h1>
+
+  <div class="controls">
+    <button id="parse-btn">Parse Markdown</button>
+    <button id="clear-btn">Clear</button>
+    <button class="theme-toggle" id="theme-toggle">Toggle Dark Mode</button>
+    <div class="live-update">
+      <label class="toggle-switch">
+        <input type="checkbox" id="live-toggle" checked>
+        <span class="slider"></span>
+      </label>
+      <span class="toggle-label">Live Update</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <textarea id="markdown-input" placeholder="Enter your Markdown here...">
+## Welcome to the Sexy Markdown Parser! 🚀
+
+This **beautiful** parser converts your _markdown_ into **_gorgeous_** HTML.
+
+### Features:
+
+* **Bold** and _italic_ text
+* Headers (like the ones above)
+* [Links](https://github.com)
+* Images: ![Example](https://via.placeholder.com/150)
+* `inline code` blocks
+* Code blocks with syntax highlighting:
+
+```javascript
+function hello() {
+  console.log("Hello, world!");
+}
+```
+
+> Blockquotes look amazing too!
+
+#### Tables are supported:
+
+| Feature | Status |
+|---------|--------|
+| Headers | ✅ |
+| Bold/Italic | ✅ |
+| Lists | ✅ |
+| Code blocks | ✅ |
+| Tables | ✅ |
+
+---
+
+Try editing this text to see the changes in real-time!
+    </textarea>
+    <div class="preview" id="preview"></div>
+  </div>
+
+  <div class="footer">
+    Created with ❤️ | Sexy Markdown Parser v1.0
+  </div>
+
+<script>
+  class MarkdownParser {
+    parse(text) {
+      return text
+        .replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/^###### (.*$)/gim, "<h6>$1</h6>")
+        .replace(/^##### (.*$)/gim, "<h5>$1</h5>")
+        .replace(/^#### (.*$)/gim, "<h4>$1</h4>")
+        .replace(/^### (.*$)/gim, "<h3>$1</h3>")
+        .replace(/^## (.*$)/gim, "<h2>$1</h2>")
+        .replace(/^# (.*$)/gim, "<h1>$1</h1>")
+        .replace(/^\> (.*$)/gim, "<blockquote>$1</blockquote>")
+        .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
+        .replace(/\*(.*?)\*/gim, "<em>$1</em>")
+        .replace(/\`(.*?)\`/gim, "<code>$1</code>")
+        .replace(/\n$/gim, "<br />");
+    }
+  }
+
+  const markdownInput = document.getElementById('markdown-input');
+  const preview = document.getElementById('preview');
+  const parseBtn = document.getElementById('parse-btn');
+  const clearBtn = document.getElementById('clear-btn');
+  const themeToggle = document.getElementById('theme-toggle');
+  const liveToggle = document.getElementById('live-toggle');
+  const parser = new MarkdownParser();
+
+  function updatePreview() {
+    const html = parser.parse(markdownInput.value);
+    preview.innerHTML = html;
+  }
+
+  // Initial render
+  updatePreview();
+
+  // Events
+  parseBtn.addEventListener('click', updatePreview);
+  clearBtn.addEventListener('click', () => {
+    markdownInput.value = '';
+    preview.innerHTML = '';
+  });
+
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+    themeToggle.textContent = document.body.classList.contains('dark-theme') ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+  });
+
+  markdownInput.addEventListener('input', () => {
+    if (liveToggle.checked) updatePreview();
+  });
+
+  markdownInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const start = this.selectionStart;
+      const end = this.selectionEnd;
+      this.value = this.value.substring(0, start) + '  ' + this.value.substring(end);
+      this.selectionStart = this.selectionEnd = start + 2;
+    }
+  });
+</script>
+
+</body>
+</html>

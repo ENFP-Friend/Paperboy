@@ -1,0 +1,62 @@
+# Interactive Components Example 🎮
+
+## Creating Interactive UI Elements
+
+This document shows how our markdown parser can be extended to support interactive elements.
+
+### Toggle Buttons
+
+```html
+<button onclick="alert('Button clicked!')">Click me!</button>
+```
+
+### Progress Indicators
+
+Progress: ▓▓▓▓▓▓▓░░░ 70%
+
+### Custom Callouts
+
+> 🔥 **Hot Tip:**
+> 
+> You can combine markdown with custom HTML elements for enhanced documentation.
+
+### Diagrams (Mermaid-like Syntax)
+
+```diagram
+graph TD;
+    A[Start] --> B{Decision};
+    B -->|Yes| C[Process 1];
+    B -->|No| D[Process 2];
+    C --> E[End];
+    D --> E;
+```
+
+## Math Equations
+
+When `a ≠ 0`, there are two solutions to `ax² + bx + c = 0` and they are:
+
+```math
+x = {-b ± √(b² - 4ac) \over 2a}
+```
+
+### Interactive Form Example
+
+```html
+<form>
+  <label for="name">Name:</label>
+  <input type="text" id="name"><br>
+  
+  <label for="feedback">Feedback:</label>
+  <textarea id="feedback"></textarea><br>
+  
+  <button type="submit">Submit</button>
+</form>
+```
+
+### Keyboard Shortcuts
+
+Use <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy and <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste.
+
+---
+
+[Back to Example 1](example1.mdma)

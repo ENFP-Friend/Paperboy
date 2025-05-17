@@ -1,0 +1,45 @@
+# Valhalla Docker Setup Guide
+
+## 🔧 Run Valhalla
+
+```sh
+docker run -it --rm -p 8002:8002 -v "C:\osmr\data:/data" ghcr.io/valhalla/valhalla:latest valhalla_service /data/valhalla.json
+```
+
+You can also use:
+
+```sh
+docker start Valhalla
+```
+
+## ✅ Test if it's running
+
+Open in browser:
+```
+http://localhost:8002/route
+```
+
+You should get a JSON error like:
+```json
+{"error_code":100,"error":"Missing required parameter 'json'","status_code":400}
+```
+
+That means it's working.
+
+---
+
+## 💡 Pro tip: Run in background
+
+```sh
+docker run -d -p 8002:8002 -v "C:\osmr\data:/data" --name valhalla ghcr.io/valhalla/valhalla:latest valhalla_service /data/valhalla.json
+```
+
+### 🔻 Shut it down
+```sh
+docker stop valhalla
+```
+
+### 🔺 Bring it back up
+```sh
+docker start valhalla
+```
