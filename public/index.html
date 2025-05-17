@@ -1,38 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Paperboy Route Optimizer</title>
-  <link href="https://unpkg.com/maplibre-gl@3.4.0/dist/maplibre-gl.css" rel="stylesheet" />
-  <style>
-    html, body { margin: 0; padding: 0; height: 100%; width: 100%; }
-    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-    #controls {
-      position: absolute; top: 10px; left: 10px; z-index: 999;
-      background: white; padding: 8px; border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flyer Route Optimizer (Leaflet & Valhalla)</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f4f4f4;
+            overflow: hidden;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+        .controls-container {
+            padding: 8px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .control-group { /* This class can still be used for the main controls */
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .control-group label, .control-group button, .control-group select {
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+            font-size: 13px;
+            margin-right: 5px;
+        }
+        .control-group button {
+             cursor: pointer;
+        }
+        .control-group button:hover {
+            background-color: #e9e9e9;
+        }
+        #map-container {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        .route-arrow-icon div {
+            width: auto;
+            height: auto;
+            text-align: center;
+            line-height: 16px;
+        }
+    </style>
 </head>
 <body>
-  <div id="map"></div>
-  <div id="controls">
-    <select id="tspSolver">
-      <option value="osrm">OSRM Clustered</option>
-      <option value="greedy">Greedy (Euclidean)</option>
-    </select>
-    <button id="solveRouteBtn">Solve Route</button>
-  </div>
-  <script src="https://unpkg.com/maplibre-gl@3.4.0/dist/maplibre-gl.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
-<!-- ✅ Load supporting scripts first -->
-<script src="loadLayers.js"></script>
-<script src="loadPoints.js"></script>
-<script src="solveTSP.js"></script>
-<script src="clustered_route_solver.js"></script>
 
-<!-- ✅ Then load the main logic -->
-<script src="map.js"></script>
+    <div class="controls-container">
+        <div class="control-group">
+            <button id="solveRouteBtn">Solve Route for Selected</button>
+            <button id="clearSelectionBtn">Clear Selection & Area</button>
+            <label for="tspSolver">TSP Solver:</label>
+            <select id="tspSolver">
+                <option value="greedy">Greedy TSP</option>
+                <option value="2opt" selected>2-Opt TSP</option>
+            </select>
+        </div>
+        </div>
+
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
+    <script src="js/turf.min.js"></script>
+    <script src="js/solveTSP.js"></script>
+    <script src="js/loadPoints_leaflet.js"></script> <script src="js/route_solver_valhalla_leaflet.js"></script>
+    <script src="js/map_leaflet.js"></script>
+
+    <script>
+        // Guidance for map_leaflet.js regarding scrollWheelZoom: 'center'
+        // This should be implemented within js/map_leaflet.js where L.map is initialized.
+        // Example: var map = L.map('map', { scrollWheelZoom: 'center' }).setView([lat, lng], zoom);
+        // This has been done in the provided map_leaflet.js
+    </script>
+
 </body>
 </html>
